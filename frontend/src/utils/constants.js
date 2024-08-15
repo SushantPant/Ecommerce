@@ -11,12 +11,6 @@ export const categories = [
 // Product Sliders Offers
 export const offerProducts = [
     {
-        image: "https://rukminim1.flixcart.com/image/150/150/jqgy3rk0/computer-table/j/2/v/particle-board-dkl-comp-tb-09-delite-kom-brown-original-imafcheqbgers37z.jpeg",
-        name: "Office Study Tables",
-        offer: "From ₹3,290",
-        tag: "Made In India Brands",
-    },
-    {
         image: "https://rukminim1.flixcart.com/image/150/150/ksoz53k0/data-cable/micro-usb-cable/o/w/a/d4-lava-original-imag67jpby4fehga.jpeg",
         name: "Mobiles & Accessories",
         offer: "In Focus Now",
@@ -113,22 +107,10 @@ export const offerProducts = [
         tag: "Top Rated",
     },
     {
-        image: "https://rukminim1.flixcart.com/image/150/150/k7jdg280/lehenga-choli/m/h/f/free-na-102l10171-saara-original-imafprdmenpgbx2n.jpeg",
-        name: "Lehenga Cholis",
-        offer: "Min 60% Off",
-        tag: "Great Savings!",
-    },
-    {
         image: "https://rukminim1.flixcart.com/image/150/150/ky3b0y80/television/s/k/h/-original-imagaedxhbam3wmx.jpeg",
         name: "8K UHD | QLED TVs",
         offer: "Upto 65% Off",
         tag: "Discover Now!",
-    },
-    {
-        image: "https://rukminim1.flixcart.com/image/150/150/jlgwmfk0/coffee-table/c/h/9/rosewood-sheesham-inlct23-induscraft-honey-brown-original-imaf8kc3gprrchxd.jpeg",
-        name: "Coffee Tables",
-        offer: "From ₹1,900",
-        tag: "Relax & Work",
     },
     {
         image: "https://rukminim1.flixcart.com/image/150/150/ksdjma80/headphone/a/u/p/airdopes-131-airdopes-138-boat-original-imag5yz9sfz9bzq8.jpeg",

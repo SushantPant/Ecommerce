@@ -26,7 +26,7 @@ const OrderDetails = () => {
 
     return (
         <>
-            <MetaData title="Order Details | Flipkart" />
+            <MetaData title="Order Details | ShopEase" />
 
             <MinCategory />
             <main className="w-full mt-14 sm:mt-4">
@@ -67,8 +67,8 @@ const OrderDetails = () => {
                                                 <div className="flex flex-col gap-1 overflow-hidden">
                                                     <p className="text-sm">{name.length > 60 ? `${name.substring(0, 60)}...` : name}</p>
                                                     <p className="text-xs text-gray-600 mt-2">Quantity: {quantity}</p>
-                                                    <p className="text-xs text-gray-600">Price: ₹{price.toLocaleString()}</p>
-                                                    <span className="font-medium">Total: ₹{(quantity * price).toLocaleString()}</span>
+                                                    <p className="text-xs text-gray-600">Price: Rs.{price.toLocaleString()}</p>
+                                                    <span className="font-medium">Total: Rs.{(quantity * price).toLocaleString()}</span>
                                                 </div>
                                             </div>
 

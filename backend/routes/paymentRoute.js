@@ -1,14 +1,10 @@
 const express = require('express');
-const { processPayment, paytmResponse, getPaymentStatus } = require('../controllers/paymentController');
-const { isAuthenticatedUser } = require('../middlewares/auth');
-
 const router = express.Router();
 
-router.route('/payment/process').post(processPayment);
-// router.route('/stripeapikey').get(isAuthenticatedUser, sendStripeApiKey);
+// Import the controller for handling POST requests
+const { processPayment } = require('../controllers/paymentController');
 
-router.route('/callback').post(paytmResponse);
-
-router.route('/payment/status/:id').get(isAuthenticatedUser, getPaymentStatus);
+// Route for processing payments
+router.post('/process-payment', processPayment);
 
 module.exports = router;

@@ -28,7 +28,7 @@ const Header = () => {
         {/* <!-- logo & search container --> */}
         <div className="flex items-center flex-1">
           <Link className="h-7 mr-1 sm:mr-4" to="/">
-            <img draggable="false" className="h-full w-full object-contain" src={logo} alt="Flipkart Logo" />
+            <img draggable="false" className="h-full w-full object-contain" src={logo} alt="ShopEase Logo" />
           </Link>
 
           <Searchbar />

@@ -48,7 +48,7 @@ const UpdateOrder = () => {
 
     return (
         <>
-            <MetaData title="Admin: Update Order | Flipkart" />
+            <MetaData title="Admin: Update Order | ShopEase" />
 
             {loading ? <Loading /> : (
                 <>
@@ -117,8 +117,8 @@ const UpdateOrder = () => {
                                             <div className="flex flex-col gap-1 overflow-hidden">
                                                 <p className="text-sm">{name.length > 45 ? `${name.substring(0, 45)}...` : name}</p>
                                                 <p className="text-xs text-gray-600 mt-2">Quantity: {quantity}</p>
-                                                <p className="text-xs text-gray-600">Price: ₹{price.toLocaleString()}</p>
-                                                <span className="font-medium">Total: ₹{(quantity * price).toLocaleString()}</span>
+                                                <p className="text-xs text-gray-600">Price: Rs.{price.toLocaleString()}</p>
+                                                <span className="font-medium">Total: Rs.{(quantity * price).toLocaleString()}</span>
                                             </div>
                                         </div>
 

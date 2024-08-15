@@ -80,7 +80,7 @@ const OrderTable = () => {
             flex: 0.2,
             renderCell: (params) => {
                 return (
-                    <span>₹{params.row.amount.toLocaleString()}</span>
+                    <span>Rs.{params.row.amount.toLocaleString()}</span>
                 );
             },
         },
@@ -120,7 +120,7 @@ const OrderTable = () => {
 
     return (
         <>
-            <MetaData title="Admin Orders | Flipkart" />
+            <MetaData title="Admin Orders | ShopEase" />
 
             {loading && <BackdropLoader />}
 

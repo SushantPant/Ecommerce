@@ -24,7 +24,7 @@ const Shipping = () => {
 
     const [address, setAddress] = useState(shippingInfo.address);
     const [city, setCity] = useState(shippingInfo.city);
-    const [country, setCountry] = useState('IN');
+    const [country, setCountry] = useState('NP');
     const [state, setState] = useState(shippingInfo.state);
     const [pincode, setPincode] = useState(shippingInfo.pincode);
     const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo);
@@ -42,7 +42,7 @@ const Shipping = () => {
 
     return (
         <>
-            <MetaData title="Flipkart: Shipping Details" />
+            <MetaData title="ShopEase: Shipping Details" />
             <main className="w-full mt-20">
 
                 {/* <!-- row --> */}
@@ -114,7 +114,7 @@ const Shipping = () => {
                                                 label="Country"
                                                 // onChange={(e) => setCountry(e.target.value)}
                                             >
-                                                <MenuItem value={'IN'}>India</MenuItem>
+                                                <MenuItem value={'NP'}>Nepal</MenuItem>
                                             </Select>
                                         </FormControl>
 

@@ -1,159 +1,66 @@
-const asyncErrorHandler = require('../middlewares/asyncErrorHandler');
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const paytm = require('paytmchecksum');
-const https = require('https');
-const Payment = require('../models/paymentModel');
-const ErrorHandler = require('../utils/errorHandler');
-const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+const Payment = require('../models/paymentModel'); // Assuming you have a Payment model defined
 
-// exports.processPayment = asyncErrorHandler(async (req, res, next) => {
-//     const myPayment = await stripe.paymentIntents.create({
-//         amount: req.body.amount,
-//         currency: "inr",
-//         metadata: {
-//             company: "Flipkart",
-//         },
-//     });
-
-//     res.status(200).json({
-//         success: true,
-//         client_secret: myPayment.client_secret, 
-//     });
-// });
-
-// exports.sendStripeApiKey = asyncErrorHandler(async (req, res, next) => {
-//     res.status(200).json({ stripeApiKey: process.env.STRIPE_API_KEY });
-// });
-
-// Process Payment
-exports.processPayment = asyncErrorHandler(async (req, res, next) => {
-
-    const { amount, email, phoneNo } = req.body;
-
-    var params = {};
-
-    /* initialize an array */
-    params["MID"] = process.env.PAYTM_MID;
-    params["WEBSITE"] = process.env.PAYTM_WEBSITE;
-    params["CHANNEL_ID"] = process.env.PAYTM_CHANNEL_ID;
-    params["INDUSTRY_TYPE_ID"] = process.env.PAYTM_INDUSTRY_TYPE;
-    params["ORDER_ID"] = "oid" + uuidv4();
-    params["CUST_ID"] = process.env.PAYTM_CUST_ID;
-    params["TXN_AMOUNT"] = JSON.stringify(amount);
-    // params["CALLBACK_URL"] = `${req.protocol}://${req.get("host")}/api/v1/callback`;
-    params["CALLBACK_URL"] = `https://${req.get("host")}/api/v1/callback`;
-    params["EMAIL"] = email;
-    params["MOBILE_NO"] = phoneNo;
-
-    let paytmChecksum = paytm.generateSignature(params, process.env.PAYTM_MERCHANT_KEY);
-    paytmChecksum.then(function (checksum) {
-
-        let paytmParams = {
-            ...params,
-            "CHECKSUMHASH": checksum,
-        };
-
-        res.status(200).json({
-            paytmParams
-        });
-
-    }).catch(function (error) {
-        console.log(error);
-    });
-});
-
-// Paytm Callback
-exports.paytmResponse = (req, res, next) => {
-
-    // console.log(req.body);
-
-    let paytmChecksum = req.body.CHECKSUMHASH;
-    delete req.body.CHECKSUMHASH;
-
-    let isVerifySignature = paytm.verifySignature(req.body, process.env.PAYTM_MERCHANT_KEY, paytmChecksum);
-    if (isVerifySignature) {
-        // console.log("Checksum Matched");
-
-        var paytmParams = {};
-
-        paytmParams.body = {
-            "mid": req.body.MID,
-            "orderId": req.body.ORDERID,
-        };
-
-        paytm.generateSignature(JSON.stringify(paytmParams.body), process.env.PAYTM_MERCHANT_KEY).then(function (checksum) {
-
-            paytmParams.head = {
-                "signature": checksum
-            };
-
-            /* prepare JSON string for request */
-            var post_data = JSON.stringify(paytmParams);
-
-            var options = {
-                /* for Staging */
-                hostname: 'securegw-stage.paytm.in',
-                /* for Production */
-                // hostname: 'securegw.paytm.in',
-                port: 443,
-                path: '/v3/order/status',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Content-Length': post_data.length
-                }
-            };
-
-            // Set up the request
-            var response = "";
-            var post_req = https.request(options, function (post_res) {
-                post_res.on('data', function (chunk) {
-                    response += chunk;
-                });
-
-                post_res.on('end', function () {
-                    let { body } = JSON.parse(response);
-                    // let status = body.resultInfo.resultStatus;
-                    // res.json(body);
-                    addPayment(body);
-                    // res.redirect(`${req.protocol}://${req.get("host")}/order/${body.orderId}`)
-                    res.redirect(`https://${req.get("host")}/order/${body.orderId}`)
-                });
-            });
-
-            // post the data
-            post_req.write(post_data);
-            post_req.end();
-        });
-
-    } else {
-        console.log("Checksum Mismatched");
-    }
-}
-
-const addPayment = async (data) => {
+const processPayment = async (req, res) => {
     try {
-        await Payment.create(data);
+        const { amount, email, phoneNo } = req.body;
+
+        // Customize your API key here (use test or live secret key based on your environment)
+        const khaltiApiKey = 'test_secret_key_0955faee90324c3b81519dcab0757680';
+
+        // Customize payment initiation data
+        const paymentData = {
+            amount: Math.round(amount * 100), // Convert amount to paisa (assuming amount is in rupees)
+            email: email,
+            phone: phoneNo,
+            productIdentity: '123456', // Example product identity
+            productName: 'Test Product', // Example product name
+        };
+
+        // Configure request headers
+        const config = {
+            headers: {
+                Authorization: "test_public_key_c4c8b667b30d494899c286d97bd378d3",
+                'Content-Type': 'application/json',
+            },
+        };
+
+        // Send payment initiation request to Khalti
+        const response = await axios.post('https://a.khalti.com/api/v2/epayment/initiate/', paymentData, config);
+
+        // Handle the response from the payment provider
+        res.status(200).json({ message: 'Payment initiated successfully', response: response.data });
     } catch (error) {
-        console.log("Payment Failed!");
+        console.error('Error processing payment:', error);
+        res.status(500).json({ error: 'Failed to process payment' });
     }
-}
+};
 
-exports.getPaymentStatus = asyncErrorHandler(async (req, res, next) => {
+const KhaltiResponse = (req, res) => {
+    // Implement logic to handle Khalti payment response/callback
+    // This route will receive callbacks from Khalti after payment processing
+    res.status(200).json({ message: 'Khalti payment response received' });
+};
 
-    const payment = await Payment.findOne({ orderId: req.params.id });
+const getPaymentStatus = async (req, res) => {
+    const orderId = req.params.id;
 
-    if (!payment) {
-        return next(new ErrorHandler("Payment Details Not Found", 404));
+    try {
+        const payment = await Payment.findOne({ orderId: orderId });
+
+        if (!payment) {
+            return res.status(404).json({ error: 'Payment not found' });
+        }
+
+        res.status(200).json({ paymentStatus: payment.status });
+    } catch (error) {
+        console.error('Error fetching payment status:', error);
+        res.status(500).json({ error: 'Failed to fetch payment status' });
     }
+};
 
-    const txn = {
-        id: payment.txnId,
-        status: payment.resultInfo.resultStatus,
-    }
-
-    res.status(200).json({
-        success: true,
-        txn,
-    });
-});
+module.exports = {
+    processPayment,
+    KhaltiResponse,
+    getPaymentStatus,
+};
